@@ -95,6 +95,9 @@ class Validate
         // Source/credit: https://github.com/jonschlinkert/is-git-url/blob/master/index.js
         $options = ['options' => ['regexp' => '/(?:git|ssh|https?|git@[\w\.]+):(?:\/\/)?[\w\.@:\/~_-]+\.git(?:\/?|\#[\d\w\.\-_]+?)$/']];
         if (filter_var($url, FILTER_VALIDATE_REGEXP, $options) === false) {
+            if (is_dir(realpath($url) . '/.git')) {
+                return $url;
+            }
             throw new \InvalidArgumentException(sprintf('Invalid URL: %s', $url));
         }
 
