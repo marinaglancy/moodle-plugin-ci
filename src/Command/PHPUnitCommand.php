@@ -55,7 +55,14 @@ class PHPUnitCommand extends AbstractMoodleCommand
             $this->moodle->directory
         );
 
-        return $process->isSuccessful() ? 0 : 1;
+        if (!$process->isSuccessful()) {
+            return 1;
+        }
+        
+        // Check for warnings in the output.
+        $results = $process->getOutput();
+
+        return (preg_match('/There (were|was) \d+ warnings?/', $results)) ? 1 : 0;
     }
 
     /**
