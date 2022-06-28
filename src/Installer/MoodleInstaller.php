@@ -84,9 +84,15 @@ class MoodleInstaller extends AbstractInstaller
     {
         $this->getOutput()->step('Cloning Moodle');
 
-        $process = new Process(sprintf('git clone --depth=1 --branch %s %s %s', $this->branch, $this->repo, $this->moodle->directory));
-        $process->setTimeout(null);
-        $this->execute->mustRun($process);
+        $cmd = [
+            'git', 'clone',
+            '--depth=1',
+            '--branch', $this->branch,
+            $this->repo,
+            $this->moodle->directory,
+        ];
+
+        $this->execute->mustRun(new Process($cmd, null, null, null, null));
 
         // Expand the path to Moodle so all other installers use absolute path.
         $this->moodle->directory = $this->expandPath($this->moodle->directory);

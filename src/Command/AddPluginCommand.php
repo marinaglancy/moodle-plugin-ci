@@ -83,12 +83,12 @@ class AddPluginCommand extends Command
         $storageDir = realpath($validate->directory($storage));
 
         $branch   = $branch !== null ? '--branch '.$branch : '';
-        /** @psalm-suppress PossiblyInvalidArgument */
-        $cloneUrl = sprintf('git clone --depth 1 %s %s', $branch, $cloneUrl);
-        $process  = new Process($cloneUrl, $storageDir);
-        $this->execute->mustRun($process);
+        $cloneCmd = ['git', 'clone', '--depth', '1', $branch, $cloneUrl];
+        $process  = $this->execute->mustRun(new Process($cloneCmd, $storageDir, null, null, null));
 
         $dumper = new EnvDumper();
         $dumper->dump(['EXTRA_PLUGINS_DIR' => $storageDir], $this->envFile);
+
+        return $process->isSuccessful() ? 0 : 1;
     }
 }
