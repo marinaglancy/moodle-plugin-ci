@@ -73,8 +73,8 @@ class MoodleInstaller extends AbstractInstaller
 
         // If there are submodules, we clean up empty directories, since we
         // don't initialise them properly anyway.
-        if (is_file($this->moodle->directory.'/.gitmodules')) {
-            $process = new Process(sprintf('git config -f %s --get-regexp \'^submodule\..*\.path$\' | awk \'{ print $2 }\' | xargs -i rmdir "%s/{}"', $this->moodle->directory.'/.gitmodules', $this->moodle->directory));
+        if (is_file($this->moodle->directory . '/.gitmodules')) {
+            $process = new Process(sprintf('git config -f %s --get-regexp \'^submodule\..*\.path$\' | awk \'{ print $2 }\' | xargs -i rmdir "%s/{}"', $this->moodle->directory . '/.gitmodules', $this->moodle->directory));
             $process->setTimeout(null);
             $this->execute->mustRun($process);
         }
@@ -83,7 +83,7 @@ class MoodleInstaller extends AbstractInstaller
 
         $this->getOutput()->debug('Creating Moodle data directories');
 
-        $dirs = [$this->dataDir, $this->dataDir.'/phpu_moodledata', $this->dataDir.'/behat_moodledata', $this->dataDir.'/behat_dump'];
+        $dirs = [$this->dataDir, $this->dataDir . '/phpu_moodledata', $this->dataDir . '/behat_moodledata', $this->dataDir . '/behat_dump'];
 
         $filesystem = new Filesystem();
         $filesystem->mkdir($dirs);
@@ -94,7 +94,7 @@ class MoodleInstaller extends AbstractInstaller
 
         $this->getOutput()->debug('Creating Moodle\'s config file');
         $contents = $this->config->createContents($this->database, $this->expandPath($this->dataDir));
-        $this->config->dump($this->moodle->directory.'/config.php', $contents);
+        $this->config->dump($this->moodle->directory . '/config.php', $contents);
 
         $this->addEnv('MOODLE_DIR', $this->moodle->directory);
     }

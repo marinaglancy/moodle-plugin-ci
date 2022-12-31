@@ -55,7 +55,7 @@ class CoverallsUploadCommand extends AbstractPluginCommand
         $this->execute->mustRun($process);
 
         $filesystem = new Filesystem();
-        $filesystem->copy($coverage, $this->plugin->directory.'/build/logs/clover.xml');
+        $filesystem->copy($coverage, $this->plugin->directory . '/build/logs/clover.xml');
 
         $process = $this->execute->passThrough(['_php_coveralls/bin/coveralls -v'], $this->plugin->directory);
 
