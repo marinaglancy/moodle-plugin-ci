@@ -45,25 +45,36 @@ class PostgresDatabase extends AbstractDatabase
             }
         }
 
-        $cmd = [];
+        $passcmd = [];
         if (!empty($this->pass)) {
-            $cmd = [
+            $passcmd = [
                 'env',
-                'PGPASSWORD=' . $this->pass];
+                'PGPASSWORD=' . $this->pass,
+            ];
         }
 
-        $cmd = array_merge($cmd, [
-            'psql',
-            '-c',
-            sprintf('CREATE DATABASE "%s";', $this->name),
-            '-U',
-            $this->user,
-            '-d',
-            'postgres',
-            '-h',
-            $this->host,
-            !empty($this->port) ? ' --port ' . $this->port : '',
-        ]);
+        $hostcmd = [];
+        if (!empty($this->host)) {
+            $hostcmd = [
+                '-h',
+                $this->host,
+            ];
+        }
+
+        $cmd = array_merge(
+            $passcmd,
+            [
+                'psql',
+                '-c',
+                sprintf('CREATE DATABASE "%s";', $this->name),
+                '-U',
+                $this->user,
+                '-d',
+                'postgres',
+                !empty($this->port) ? ' --port ' . $this->port : '',
+            ],
+            $hostcmd
+        );
 
         return array_filter($cmd); // Remove empties.
     }
