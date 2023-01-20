@@ -74,23 +74,9 @@ class MoodleInstaller extends AbstractInstaller
         // If there are submodules, we clean up empty directories, since we
         // don't initialise them properly anyway.
         if (is_file($this->moodle->directory . '/.gitmodules')) {
-            $cmd = [
-                'git',
-                'config',
-                '-f',
-                $this->moodle->directory . '/.gitmodules',
-                '--get-regexp',
-                '\'^submodule\..*\.path$\'',
-                '|',
-                'awk',
-                '\'{ print $2 }\'',
-                '|',
-                'xargs',
-                '-i',
-                'rmdir',
-                '"' . $this->moodle->directory . '/{}"',
-            ];
-            $process = new Process($cmd);
+            $process = Process::fromShellCommandline(sprintf('git config -f %s --get-regexp \'^submodule\..*\.path$\' ' .
+                '| awk \'{ print $2 }\' | xargs -i rmdir "%s/{}"',
+                $this->moodle->directory . '/.gitmodules', $this->moodle->directory));
             $process->setTimeout(null);
             $this->execute->mustRun($process);
         }
