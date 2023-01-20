@@ -75,8 +75,8 @@ class AddPluginCommand extends Command
         $filesystem->mkdir($storage);
         $storageDir = realpath($validate->directory($storage));
 
-        $branch   = $branch !== null ? '--branch ' . $branch : '';
-        $cloneCmd = ['git', 'clone', '--depth', '1', $branch, $cloneUrl];
+        $cloneUrl = ($branch !== null ? '--branch ' . $branch . ' ' : '') . $cloneUrl;
+        $cloneCmd = ['git', 'clone', '--depth', '1', $cloneUrl];
         $process  = $this->execute->mustRun(new Process($cloneCmd, $storageDir, null, null, null));
 
         $dumper = new EnvDumper();
